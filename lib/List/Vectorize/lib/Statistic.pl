@@ -58,7 +58,7 @@ sub var {
 	}
     
 	# if the second argument was not specified
-    if($mean eq "") {
+    if(!defined($mean) or $mean eq "") {
         $mean = mean($array);
     }
     return sum(sapply($array, sub {($_[0]-$mean)**2})) / $#$array;
@@ -213,11 +213,11 @@ sub sample {
         for(my $i = 0; $i < $size; $i ++) {
             my $ind = _get_index_from_p(rand(), $ecdf);
             push(@$sample, $array_copy->[$ind]);
-            
+            $p_sum -= $p_copy->[$ind];
+			
 			$array_copy = del_array_item($array_copy, $ind);
 			$p_copy = del_array_item($p_copy, $ind);
-			
-			$p_sum -= $p_copy->[$ind];
+
             $p_copy = sapply($p_copy, sub{$_[0]/$p_sum});
             $ecdf = _ecdf($p_copy);
         }
@@ -261,8 +261,8 @@ sub rnorm {
     my $mean = shift;
     my $sd = shift;
     
-    $mean = $mean ne "" ? $mean : 0;
-    $sd = $sd ne "" ? $sd : 1;
+    $mean = (defined($mean) and $mean ne "") ? $mean : 0;
+    $sd = (defined($sd) and $sd ne "") ? $sd : 1;
     
     my $r = [];
     for(my $i = 0; $i < $size; $i ++) {
@@ -289,7 +289,7 @@ sub rbinom {
 	my $size = shift;
 	my $p = shift;
 	
-	$p = $p ne "" ? $p : 0.5;
+	$p = (defined($p) and $p ne "") ? $p : 0.5;
 	
 	my $d = initial_array($size);
 	$d = sapply($d, sub { rand() < $p ? 1 : 0});
@@ -395,7 +395,7 @@ sub quantile {
 		
 		my $n = len($array);
 		
-		if(abs(int($p*($n-1)) - $p*($n-1)) < EPS) {
+		if(&abs(int($p*($n-1)) - $p*($n-1)) < EPS) {
 			return $array->[int($p*($n-1))];
 		}
 		else {

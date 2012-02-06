@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 4;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $a = initial_matrix(10, 10);
 my $b = initial_matrix(10, 10, 1);

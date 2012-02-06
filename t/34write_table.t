@@ -2,5 +2,5 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 

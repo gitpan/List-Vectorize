@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 3;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $x = ["a", "b", "c", "d"];
 my $y = ["b", "c", "d", "e"];

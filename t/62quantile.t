@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 7;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $x = [0..10];
 my $q = quantile($x);

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 4;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $a = c(1, 2, 3);
 my $b = c([1..5], [6..8]);

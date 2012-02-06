@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 7;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 is(is_empty([1..10]), 0);
 is(is_empty([]), 1);

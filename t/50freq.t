@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 3;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $a = ["a", "a", "a", "b", "b", "b", "c", "c"];
 my $t = freq($a);

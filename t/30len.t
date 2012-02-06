@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 5;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 is(len([1..10]), 10);
 is(len({a => 1, b => 2}), 2);

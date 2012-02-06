@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 3;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $x = [10..20];
 my $a = subset($x, [1, 2, 5]);

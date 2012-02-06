@@ -9,12 +9,12 @@ require Exporter;
 
 our @ISA = ("Exporter");
 
-our $VERSION = "0.10";
+our $VERSION = "0.12";
 
 our @EXPORT = qw(sapply mapply happly tapply initial_array initial_matrix order
                  rank sort_array reverse_array repeat rep copy paste seq c test 
-                 unique subset subset_value which dim t diag matrix_prod is_array_identical 
-                 is_matrix_identical outer match len abs plus minus multiple divide
+                 unique subset subset_value which dim t matrix_prod is_array_identical 
+                 is_matrix_identical outer match len abs plus minus multiply divide
                  print_ref print_matrix read_table write_table intersect union
                  setdiff setequal is_element sign sum mean geometric_mean 
                  sd var cov cor dist freq table scale sample del_array_item 
@@ -26,8 +26,8 @@ our %EXPORT_TAGS = (
      apply => [qw(sapply mapply happly tapply)],
      list  => [qw(initial_array initial_matrix order rank sort_array reverse_array
 		          repeat rep copy paste seq c test unique subset subset_value
-			      which dim t diag matrix_prod is_array_identical is_matrix_identical
-			      outer match len is_empty del_array_item plus minus multiple divide)],
+			      which dim t matrix_prod is_array_identical is_matrix_identical
+			      outer match len is_empty del_array_item plus minus multiply divide)],
      io    => [qw(print_ref print_matrix read_table write_table)],
      set   => [qw(intersect union setdiff setequal is_element)],
      stat  => [qw(sign sum mean geometric_mean sd var cov cor dist freq table scale
@@ -383,13 +383,6 @@ Transpose the matrix.
   my $t = t($m);
   print_matrix($t);
 
-=item C<diag(ARRAY_REF)>
-
-Diagnal of the matrix.
-
-  my $m = [[1,2],[3,4]];
-  print_ref diag($m);
-
 =item C<matrix_prod(ARRAY_REF,ARRAY_REF, ...)>
 
 Product a list of matrixes.
@@ -424,27 +417,19 @@ whether the two matrixes are similarly same.
 
 whether the reference is empty.
 
-=back
-
 =item C<plus(ARRAY_REF, ARRAY_REF, ...)>
 
 plus of arrays
 
   my $r = plus([1..10], [2..11], 2);
 
-=back
-
 =item C<minus(ARRAY_REF, ARRAY_REF, ...)>
 
 minus of arrays
 
-=back
-
 =item C<multiply(ARRAY_REF, ARRAY_REF, ...)>
 
 multiply of arrays
-
-=back
 
 =item C<divide(ARRAY_REF, ARRAY_REF, ...)>
 
@@ -702,7 +687,7 @@ Zuguang Gu E<lt>jokergoo@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2011 by Zuguang Gu
+Copyright 2012 by Zuguang Gu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.1 or,

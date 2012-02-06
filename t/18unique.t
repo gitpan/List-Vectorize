@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 2;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $x = ["a", "a", "b", "b", "c"];
 my $y = unique($x);

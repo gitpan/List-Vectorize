@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 9;
 
-BEGIN { use_ok('List::Rfunc') }
+BEGIN { use_ok('List::Vectorize') }
 
 my $m = [[1,2],[3,4]];
 my $m2 = matrix_prod($m, $m);

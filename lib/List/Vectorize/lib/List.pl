@@ -37,13 +37,13 @@ sub order {
 }
 
 sub rank {
-	my $order = order($_[0]);
-	my $array = shift;
+	my $order = order(@_);
+	my $array = shift(@_);
 	my $rank = [];
 	my $same = [];
 	my $index = [];
-	my $i = 0;
-	for(; $i < len($order); $i ++) {
+	for($i = 0; $i < len($order); $i ++) {
+		
 		if($i != 0 and ($array->[$order->[$i]] != $array->[$order->[$i - 1]])) {
 			foreach (@$index) {
 				$rank->[$_] = mean($same);
@@ -51,15 +51,14 @@ sub rank {
 			$same = [];
 			$index = [];
 		}
+		
 		push(@$same, $i+1);
 		push(@$index, $order->[$i]);
+		
 	}
-	if($i != 0 and ($array->[$order->[$i]] != $array->[$order->[$i - 1]])) {
-		foreach (@$index) {
-			$rank->[$_] = mean($same);
-		}
-		$same = [];
-		$index = [];
+	
+	foreach (@$index) {
+		$rank->[$_] = mean($same);
 	}
 	return $rank;
 }
@@ -307,23 +306,6 @@ sub t {
     }
     return $t;
 }
-
-
-sub diag {
-	my $matrix = shift;
-	
-	my ($n_row, $n_col) = dim($matrix);
-	if($n_row != $n_col) {
-		croak "ERROR: matrix must be square\n";
-	}
-	
-	my $diag;
-	for(my $i = 0; $i < $n_row; $i ++) {
-        push(@$diag, $matrix->[$i]->[$i]);
-    }
-	return $diag;
-}
-
 
 sub matrix_prod {
 	if(scalar(@_) > 2) {
