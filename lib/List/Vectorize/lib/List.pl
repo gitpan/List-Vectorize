@@ -1,6 +1,9 @@
 
 
 sub initial_array {
+
+	check_prototype(@_, '$(\&|$|\@)?');
+	
 	my $size = shift;
 	my $value = shift || undef;
 	if(is_code_ref($value)) {
@@ -13,6 +16,9 @@ sub initial_array {
 
 
 sub initial_matrix {
+
+	check_prototype(@_, '$$(\&|$)?');
+	
 	my $n_row = shift;
 	my $n_col = shift;
 	my $value = shift || undef;
@@ -28,8 +34,11 @@ sub initial_matrix {
 
 
 sub order {
+
+	check_prototype(@_, '\@(\&)?');
+	
     my $array = shift;
-    my $function = shift || sub {$_[0] <=> $_[1]};   # 第二个参数表示排序的函数
+    my $function = shift || sub {$_[0] <=> $_[1]}; 
 
     my $order = [];
 	@$order = sort { $function->($array->[$a], $array->[$b]) } 0..$#$array;
@@ -37,6 +46,9 @@ sub order {
 }
 
 sub rank {
+	
+	check_prototype(@_, '\@(\&)?');
+	
 	my $order = order(@_);
 	my $array = shift(@_);
 	my $rank = [];
@@ -65,6 +77,9 @@ sub rank {
 
 
 sub sort_array {
+	
+	check_prototype(@_, '\@(\&)?');
+	
 	my $array = shift;
     my $function = shift || sub {$_[0] <=> $_[1]}; 
     
@@ -73,6 +88,9 @@ sub sort_array {
 
 
 sub reverse_array {
+	
+	check_prototype(@_, '\@');
+	
     my $array = shift;
     
 	return [reverse(@$array)];
@@ -80,6 +98,9 @@ sub reverse_array {
 
 
 sub repeat {
+	
+	check_prototype(@_, '($|\$|\@|\%)$$?');
+	
     my $value = shift;
     my $size = shift;
 	my $need_copy = shift;
@@ -105,11 +126,17 @@ sub repeat {
 }
 
 sub rep {
+
+	check_prototype(@_, '($|\$|\@|\%)$$?');
+	
 	return repeat(@_);
 }
 
 
 sub copy {
+	
+	check_prototype(@_, '(\$|\@|\%)');
+	
 	my $value = shift;
 	my $copy;
 	if(is_ref_ref(\$value)) { 
@@ -128,6 +155,9 @@ sub copy {
 
 
 sub paste {
+
+	check_prototype(@_, '(\@|$)+');
+	
 	my $sep;
 	if(is_scalar_ref(\$_[$#_])) {
 		$sep = pop; 
@@ -142,6 +172,9 @@ sub paste {
 
 
 sub seq {
+
+	check_prototype(@_, '$$$?');
+	
     my $from = shift;
     my $to = shift;
     my $by = shift || 1;
@@ -162,7 +195,10 @@ sub seq {
 
 
 sub c {
-    my @array_refs = @_;
+    
+	check_prototype(@_, '(\@|$|\$)+');
+	
+	my @array_refs = @_;
     my $c = [];
     foreach (@array_refs) {
 		if(is_array_ref($_)) {
@@ -177,6 +213,9 @@ sub c {
 
 
 sub test {
+	
+	check_prototype(@_, '\@\&');
+	
     my $array = shift;
     my $function = shift;
 
@@ -185,6 +224,9 @@ sub test {
 
 
 sub unique {
+	
+	check_prototype(@_, '\@');
+	
     my $array = shift;
     my $hash = {};
     return [grep {not $hash->{$_} ++} @$array];
@@ -192,6 +234,9 @@ sub unique {
 
 
 sub subset {
+	
+	check_prototype(@_, '\@(\@|\&)');
+	
     my $array = shift;
     my $index = shift;
     
@@ -213,7 +258,7 @@ sub subset {
 			}
 		}
 		elsif($max_index < 0) {
-			return subset($array, complement(sapply($index, sub {-$_[0]-1}), seq(0, $#$index)));
+			return subset($array, setdiff(seq(0, $#$array), sapply($index, sub {-$_[0]-1})));
 		}
         return $subset;
     }
@@ -221,6 +266,9 @@ sub subset {
 
 
 sub subset_value {
+
+	check_prototype(@_, '\@(\@|\&)(\@|$)');
+		
     my $array = shift;
     my $index = shift;
 	my $value = shift;
@@ -257,8 +305,10 @@ sub subset_value {
 
 # usage: del_array_item( [ARRAY REF])
 # return: ARRAY REF
-# description: 删除了数组的一个元素，然后数组缩短
 sub del_array_item {
+
+	check_prototype(@_, '\@($|\@)');
+	
 	my $array = shift;
 	my $del_i = shift;
 	
@@ -274,6 +324,9 @@ sub del_array_item {
 
 
 sub which {
+	
+	check_prototype(@_, '\@');
+	
     my $logical = shift;
     
     my $which = [];
@@ -281,19 +334,49 @@ sub which {
     return $which;
 }
 
+sub all {
+    
+    check_prototype(@_, '\@');
+    
+    my $l = shift;
+    if(len($l)) {
+        return sum(test($l, sub {$_[0]})) == len($l) ? 1 : 0;
+    } else {
+        return 0;
+    }
+}
+
+sub any {
+
+    check_prototype(@_, '\@');
+    
+    my $l = shift;
+    return sum(test($l, sub {$_[0]})) ? 1 : 0;
+}
+
 
 sub dim {
+	
+	check_prototype(@_, '\@');
+	
 	my $mat = shift;
-	if(is_array_ref($mat) and is_array_ref($mat->[0])) {
-		return (len($mat), len($mat->[0]));
+	if(all(sapply($mat, sub {is_array_ref($_[0])}))) {
+		
+		my $nc = len($mat->[0]);
+		if(all(sapply($mat, sub {len($_[0]) == $nc}))) {
+			return (len($mat), $nc);
+		}
 	}
-	else {
-		return ();
-	}
+	
+	return undef;
+
 }
 
 
 sub t {
+	
+	check_prototype(@_, '\@');
+	
     my $matrix = shift;
     
     my ($n_row, $n_col) = dim($matrix);
@@ -308,6 +391,9 @@ sub t {
 }
 
 sub matrix_prod {
+	
+	check_prototype(@_, '(\@)+');
+	
 	if(scalar(@_) > 2) {
 		my $first = shift(@_);
 		my $second = shift(@_);
@@ -341,6 +427,9 @@ sub matrix_prod {
 
 
 sub is_array_identical {
+	
+	check_prototype(@_, '\@\@');
+	
 	my $array1 = shift;
 	my $array2 = shift;
 	
@@ -359,11 +448,18 @@ sub is_array_identical {
 
 
 sub is_matrix_identical {
+
+	check_prototype(@_, '\@\@');
+	
 	my $matrix1 = shift;
 	my $matrix2 = shift;
 	
 	my ($d1, $d2) = dim($matrix1);
 	my ($d3, $d4) = dim($matrix2);
+	
+	if(!defined($d1) or !defined($d2) or !defined($d3) or !defined($d4)) {
+		return 0;
+	}
 	
 	unless($d1 == $d3 and $d2 == $d4) {
 		return 0;
@@ -380,6 +476,9 @@ sub is_matrix_identical {
 
 
 sub outer {
+	
+	check_prototype(@_, '\@\@(\&)?');
+	
 	my $vector1 = shift;
 	my $vector2 = shift;
 	my $function = shift || sub {$_[0]*$_[1]};
@@ -394,8 +493,23 @@ sub outer {
 	return $outer;
 }
 
+sub inner {
+	
+	check_prototype(@_, '\@\@(\&)?');
+	
+	my $vector1 = shift;
+	my $vector2 = shift;
+	my $function = shift || sub {$_[0]*$_[1]};
+	
+	my $inner = [];
+	$inner = sum(mapply($vector1, $vector2, $function));
+	
+	return $inner;
+}
+
 
 sub len {
+	
 	my $array = shift;
 	if(is_array_ref($array)) {
 		return scalar(@$array);
@@ -412,6 +526,9 @@ sub len {
 }
 
 sub match {
+	
+	check_prototype(@_, '\@\@');
+	
 	my $array1 = shift;
 	my $array2 = shift;
 	
@@ -433,6 +550,8 @@ sub is_empty {
 
 sub plus {
 	
+	check_prototype(@_, '(\@|$)+');
+	
 	croak "ERROR: at least two array lists is required" if scalar(@_) < 2;
 	
 	my $array1 = shift;
@@ -449,7 +568,9 @@ sub plus {
 }
 
 sub minus {
-
+	
+	check_prototype(@_, '(\@|$)+');
+	
 	croak "ERROR: at least two array lists is required" if scalar(@_) < 2;
 	
 	my $array1 = shift;
@@ -466,7 +587,9 @@ sub minus {
 }
 
 sub divide {
-
+	
+	check_prototype(@_, '(\@|$)+');
+	
 	croak "ERROR: at least two array lists is required" if scalar(@_) < 2;
 	
 	my $array1 = shift;
@@ -483,7 +606,9 @@ sub divide {
 }
 
 sub multiply {
-
+	
+	check_prototype(@_, '(\@|$)+');
+	
 	croak "ERROR: at least two array lists is required" if scalar(@_) < 2;
 	
 	my $array1 = shift;

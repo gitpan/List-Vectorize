@@ -77,8 +77,12 @@ sub is_ref_ref {
 
 # description: the type of a scalar
 sub type_of {
+
 	if(ref($_[0])) {
 		return ref($_[0])."_REF";
+	}
+	elsif(ref(\$_[0]) eq "GLOB") {
+		return "GLOB";
 	}
 	else {
 		return "SCALAR";

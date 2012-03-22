@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 2;
 
 BEGIN { use_ok('List::Vectorize') }
 
@@ -9,5 +9,4 @@ my $y = ["b", "c", "d", "e"];
 
 my $m = match($x, $y);
 
-is($m->[0], 1);
-is($m->[1], 2);
+is_deeply($m, [1, 2, 3]);

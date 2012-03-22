@@ -4,11 +4,11 @@ WriteMakefile(
 	NAME          => 'List::Vectorize',
 	VERSION_FROM  => 'lib/List/Vectorize.pm',
 	PREREQ_PM     => {
-		'Data::Dumper' => "",
-		'Test::More'   => "",
-		'Carp'         => "",
+		'Data::Dumper' => 0,
+		'Test::More'   => 0,
+		'Carp'         => 0,
 	},
 	AUTHOR        => 'Zuguang Gu <jokergoo@gmail.com>',
-	ABSTRACT      => 'Functions for vectorized calculation',
+	ABSTRACT      => 'functions to make vectorized calculation easy',
 	LICENSE       => 'perl',
 );

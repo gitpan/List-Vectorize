@@ -3,6 +3,8 @@
 # return: ARRAY REF
 sub intersect {
 	
+	check_prototype(@_, '(\@)+');
+	
 	if(scalar(@_) < 2) {
 		return $_[0];
 	}
@@ -12,17 +14,19 @@ sub intersect {
 	my @remain_set = @_;
 	
 	# if set1 or set2 is empty
-	if(!$set1 or !$set2) {
+	if(is_empty($set1) or is_empty($set2)) {
 		return [];
 	}
 	
     my $hash2;
-    foreach (@$set2) {
+    for (@$set2) {
         $hash2->{$_} = 1;
     }
+	
+	$set1 = unique($set1);
     
     my $intersect;
-    foreach (@$set1) {
+    for (@$set1) {
         push(@$intersect, $_) if($hash2->{$_});
     }
 	
@@ -40,6 +44,8 @@ sub intersect {
 # return: ARRAY REF
 sub union {
 	
+	check_prototype(@_, '(\@)+');
+	
 	if(scalar(@_) < 2) {
 		return $_[0];
 	}
@@ -47,16 +53,19 @@ sub union {
     my $set1 = shift;
     my $set2 = shift;
 	my @remain_set = @_;
+	
+	$set1 = unique($set1);
+	$set2 = unique($set2);
     
-    my $hash;
-    foreach (@$set1) {
-        $hash->{$_} = 1;
-    }
-    foreach (@$set2) {
-        $hash->{$_} = 1;
+    my $hash1;
+    my $union = $set1;
+    for (@$set1) {
+        $hash1->{$_} = 1;
     }
 	
-	my $union = [keys %$hash];
+	for (@$set2) {
+		push(@$union, $_) if(! $hash1->{$_});
+	}
 	
 	$union = union($union, @remain_set);
 	
@@ -67,6 +76,9 @@ sub union {
 # return: ARRAY REF
 # set1 - set2
 sub setdiff {
+	
+	check_prototype(@_, '\@\@');
+	
     my $set1 = shift;
     my $set2 = shift;
     
@@ -85,6 +97,9 @@ sub setdiff {
 # usage: setequal( [ARRAY REF], [ARRAY REF] )
 # return: 1|0
 sub setequal {
+	
+	check_prototype(@_, '\@\@');
+	
 	my $set1 = shift;
 	my $set2 = shift;
 	
@@ -104,12 +119,15 @@ sub setequal {
 # usage: is_element( [SCALAR], [ARRAY REF])
 # return 0|1
 sub is_element {
+	
+	check_prototype(@_, '$\@');
+	
 	my $item = shift;
 	my $set = shift;
 	
 	for(my $i = 0; $i < len($set); $i ++) {
 		if(is_numberic($set->[$i]) and is_numberic($item)
-		   and $set->[$i] == $item) {
+		   and abs($set->[$i] - $item) < EPS) {
 			return 1;
 		}
 		elsif($set->[$i] eq $item) {

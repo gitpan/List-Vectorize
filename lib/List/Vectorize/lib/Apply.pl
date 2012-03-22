@@ -1,9 +1,12 @@
 
 
 sub sapply {
-    my $array = shift;
-    my $function = shift;
 
+    check_prototype(@_, '\@\&');
+
+	my $array = shift;
+    my $function = shift;
+	
     my $sapply = [];
     @$sapply = map { my $scalar = $function->($_);
                      $scalar;
@@ -14,9 +17,12 @@ sub sapply {
 
 
 sub mapply {
-    my $function = pop; # the last argument
-    my @array = @_;
+    
+	check_prototype(@_, '(\@|$)+\&');
 
+	my $function = pop; # the last argument
+    my @array = @_;
+	
     for (0..$#array) {
         if(! is_array_ref($array[$_])) {
             $array[$_] = [$array[$_]];
@@ -65,9 +71,12 @@ sub _cycle {
 
 
 sub happly {
-    my $hash = shift;
-    my $function = shift;
 
+    check_prototype(@_, '\%\&');
+
+	my $hash = shift;
+    my $function = shift;
+	
     my $happly = {};
     foreach (keys %$hash) {
         $happly->{$_} = do { my $scalar = $function->($hash->{$_});
@@ -78,7 +87,10 @@ sub happly {
 
 
 sub tapply {
-    my $array = shift;
+    
+	check_prototype(@_, '\@(\@)+\&');
+	
+	my $array = shift;
 	my $function = pop;
     my @category = @_;
 	

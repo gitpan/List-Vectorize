@@ -1,10 +1,13 @@
 
 # ============================= IO subroutine ==============================================
 # usage: print_ref( [TYPEGLOB], [SCALAR] )
-# description: 打印出索引的数据结构
+# description: print the data structure of a reference
 sub print_ref {
-	my $handle = *STDOUT;
-	if(is_glob_ref($_[0])) {
+	
+	check_prototype(@_, '*?($|\$|\@|\%|\&)+');
+	
+	local $handle = *STDOUT;
+	if(is_glob_ref(\$_[0])) {
 		$handle = shift(@_);
 	}
 	my $ref = shift;
@@ -38,10 +41,13 @@ sub print_ref {
 }
 
 # usage: print_matrix( [TYPEGLOB], [SCALAR] )
-# description: 打印矩阵
+# description: print the matrix
 sub print_matrix {
-	my $handle = *STDOUT;
-	if(is_glob_ref($_[0])) {
+	
+	check_prototype(@_, '*?\@');
+	
+	local $handle = *STDOUT;
+	if(is_glob_ref(\$_[0])) {
 		$handle = shift(@_);
 	}
 	my $mat = $_[0];
@@ -58,37 +64,19 @@ sub print_matrix {
 }
 
 # usage: read_table( [SCALAR], %setup )
-# description: 读取表格形式的文本数据
-#              quote: 把每个值引起来的符号，默认无
-#              sep: 分隔符，默认制表符
-#              col_skip: 跳过读取的列号，以1开始
-#              row_skip: 跳过读取的行号，以1开始
-#              rownames: 是否读入行名
-#              colnames: 是否读入列名
 sub read_table {
+	
+	check_prototype(@_, '$($|\@){0,}');
+	
 	my $file = shift;
 	
 	my %setup = @_;
 	my $quote = $setup{"quote"} || "";
 	my $sep = $setup{"sep"} || "\t";
-	my $col_skip = $setup{"col.skip"} || [0];   # columns being skipped, array ref, start with 1
-	my $row_skip = $setup{"row.skip"} || [0];   # rows being skipped, array ref, start with 1
 	my $whether_rownames = $setup{"row.names"} || 0;       # if set true, first item will be key
 	my $whether_colnames = $setup{"col.names"} || 0;       # if set true, first item will be key
 	
-	if(type_of($col_skip) eq "SCALAR") {
-		$col_skip = [$col_skip];
-	}
-	if(type_of($row_skip) eq "SCALAR") {
-		$row_skip = [$row_skip];
-	}
-	
-	my $col_skip_h;
-	%$col_skip_h = map {$_ => 1} @$col_skip;
-	my $row_skip_h;
-	%$row_skip_h = map {$_ => 1} @$row_skip;
-	
-	open F, $file or die "cannot open $file.\n";
+	open F, $file or croak "ERROR: cannot open $file.\n";
 	my $data;
 	my $rownames;
 	my $colnames;
@@ -98,17 +86,16 @@ sub read_table {
 	while( my $line = <F>) {
 		$i_line ++;
 		
-		# check rows that are skipped
-		if($row_skip_h->{$i_line}) {
-			next;
-		}
-		
 		# read the column names
 		if($flag == 0 and $whether_colnames) {
 			chomp $line;
 			$line =~s/^$quote|$quote$//g;
 			@$colnames = split "$quote$sep$quote", $line; 
+			if($whether_rownames) {
+				shift(@$colnames);
+			}
 			$flag = 1;
+			$i_line --;
 			next;
 		}
 		
@@ -118,10 +105,6 @@ sub read_table {
 		$line =~s/^$quote|$quote$//g;
 		my @tmp = split "$quote$sep$quote", $line; 
 		
-		# columns that are skipped
-		my @r_ind = grep {!$col_skip_h->{$_+1}} (0..$#tmp);
-		@tmp = @{subset(\@tmp, \@r_ind)};
-		
 		# read rownames
 		if($whether_rownames) {
 			push(@$rownames, shift(@tmp));
@@ -130,17 +113,16 @@ sub read_table {
 		push(@{$data->[$i_array - 1]}, @tmp);
 		
 	}
-	return ($data, $colnames, $rownames);
+	close F;
+
+	wantarray ? ($data, $colnames, $rownames) : $data;
 }
 
 # usage: write_table( [MATRIX], %setup )
-# description: 把矩阵输出到文件中
-#              quote: 把每个值引起来的符号，默认无
-#              sep: 分隔符，默认制表符
-#              colnames: 列名，数组索引
-#              rownames: 行名，数组索引
-#              file: 存储的文件名
 sub write_table {
+	
+	check_prototype(@_, '\@($|\@){2,}');
+	
 	my $matrix = shift;
 	
 	my %setup = @_;
@@ -152,13 +134,13 @@ sub write_table {
 	
 	my ($nrow, $ncol) = dim($matrix);
 	if($rownames and $nrow != len($rownames)) {
-		die "Length of rownames should be equal to the length of rows in matrix\n";
+		croak "ERROR: Length of rownames should be equal to the length of rows in matrix\n";
 	}
 	if($colnames and $ncol != len($colnames)) {
-		die "Length of colnames should be equal to the length of columns in matrix\n";
+		croak "ERROR: Length of colnames should be equal to the length of columns in matrix\n";
 	}
 	
-	open OUT, ">$file" or die "cannot create file:$file\n";
+	open OUT, ">$file" or croak "ERROR: Cannot create file:$file\n";
 	if($rownames) {
 		if($colnames) {
 			# print colnames

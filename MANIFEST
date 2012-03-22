@@ -1,5 +1,7 @@
-MANIFEST
+Changes
 Makefile.PL
+MANIFEST
+README
 lib/List/Vectorize.pm
 lib/List/Vectorize/lib/Apply.pl
 lib/List/Vectorize/lib/Datatype.pl
@@ -7,10 +9,23 @@ lib/List/Vectorize/lib/IO.pl
 lib/List/Vectorize/lib/List.pl
 lib/List/Vectorize/lib/Set.pl
 lib/List/Vectorize/lib/Statistic.pl
+t/00-1load.t
+t/00-check_prototype.t
+t/00-check_prototype2.t
+t/00-export-all.t
+t/00-export-apply.t
+t/00-export-io.t
+t/00-export-list.t
+t/00-export-set.t
+t/00-export-stat.t
+t/00-pod-coverage.t
+t/00-pod.t
 t/01sapply.t
+t/01sapply2.t
 t/02mapply.t
 t/03happly.t
 t/04tapply.t
+t/04tapply2.t
 t/05initial_array.t
 t/06initial_matrix.t
 t/07order.t
@@ -30,10 +45,11 @@ t/20subset_value.t
 t/21which.t
 t/22dim.t
 t/23t.t
+t/24del_array_item.t
 t/25matrix_prod.t
 t/26is_array_identical.t
 t/27is_matrix_identical.t
-t/28outer.t
+t/28outer-inner.t
 t/29match.t
 t/30len.t
 t/31print_ref.t
@@ -58,7 +74,8 @@ t/50freq.t
 t/51table.t
 t/52scale.t
 t/53sample.t
-t/54del_array_item.t
+t/54read-write.t
+t/54read-write2.t
 t/55rnorm.t
 t/56rbinom.t
 t/57max.t
@@ -73,5 +90,5 @@ t/65is_empty.t
 t/66plus.t
 t/67minus.t
 t/68multiply.t
-
+t/private.t
 META.yml                                 Module meta-data (added by MakeMaker)
