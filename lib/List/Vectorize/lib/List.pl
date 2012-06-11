@@ -181,12 +181,12 @@ sub seq {
     
     my $seq = [];
     if($from < $to) {
-        for(my $i = $from; $i <= $to; $i += $by) {
+		for(my $i = $from; $i <= $to; $i += $by) {
             push(@$seq, $i);
         }
     }
     else {
-        for(my $i = $from; $i >= $to; $i -= $by) {
+		for(my $i = $from; $i >= $to; $i -= $by) {
             push(@$seq, $i);
         }
     }

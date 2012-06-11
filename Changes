@@ -1,6 +1,9 @@
 
-1.00  add more testing file
-      add prototype checking for each subroutine
-      correct subroutines of subset, intersect, union, type_of
-	  correct the document
-	  
+1.00
+- add more testing file
+  add prototype checking for each subroutine
+  correct subroutines of subset, intersect, union, type_of
+  correct the document
+
+1.02
+- add some command line scripts

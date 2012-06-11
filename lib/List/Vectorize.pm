@@ -9,7 +9,7 @@ require Exporter;
 
 our @ISA = ("Exporter");
 
-our $VERSION = "1.00";
+our $VERSION = "1.02";
 
 our @EXPORT = qw(sapply mapply happly tapply initial_array initial_matrix order
                  rank sort_array reverse_array repeat rep copy paste seq c test 
@@ -766,6 +766,46 @@ cummulative function on an array.
   my $x = rnorm(10);
   my $sum = sum($x);
   my $ecdf = cumf($x, sub {sum($_[0])/$sum});
+
+=back
+
+=head1 COMMAND LINE
+
+We provide some scripts to manuplate text files.
+
+=item C<l.intersect file1 file2 ...>
+
+Find same lines in a list of files.
+
+=item C<l.union file1 file2 ...>
+
+Integrate lines in a list of files.
+
+=item C<l.setdiff file1 file2>
+
+Find lines in the first file while not in the second file.
+
+=item C<l.unique file>
+
+Remove repeated lines
+
+=item C<l.sort file [sort_function]>
+
+Sort lines by certain function. Function should looks like C<sub {$a <=> $b}>,
+C<sub {$_[0] cmp $_[1]}> or C<{$a <=> $b}>. That means you can use C<$a>/C<$b> or
+C<$_[0]>/C<$_[1]> to represent two items while sorting.
+
+=item C<l.sapply file [apply_function]>
+
+Apply function on each line in a file. Function should looks like C<sub {$_}>,
+C<sub {$_[0]}> or C<{$_}>. That means you can use C<$_[0]> or C<$_> to represent
+line in the file.
+
+=item C<l.subset file [subset_function]>
+
+Extract line that satidfy some rule in a file. Function should looks like C<sub {$_ E<lt> 0}>,
+C<sub {$_[0] E<lt> 0}> or C<{$_ E<lt> 0}>. That means you can use C<$_[0]> or C<$_> to represent
+line in the file.
 
 =back
 
