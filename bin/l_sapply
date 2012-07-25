@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 
 use strict;
 use List::Vectorize;
@@ -16,5 +15,5 @@ if ($@) {
 }
 my $a = [ <F> ];
 $a = sapply($a, sub {chomp $_[0]; $_[0]});
-print join "\n", @{subset($a, $fun)};
+print join "\n", @{sapply($a, $fun)};
 print "\n";

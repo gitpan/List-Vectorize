@@ -91,12 +91,12 @@ t/66plus.t
 t/67minus.t
 t/68multiply.t
 t/private.t
-bin/l.intersect
-bin/l.sapply
-bin/l.setdiff
-bin/l.sort
-bin/l.subset
-bin/l.union
-bin/l.unique
+bin/l_intersect
+bin/l_sapply
+bin/l_setdiff
+bin/l_sort
+bin/l_subset
+bin/l_union
+bin/l_unique
 META.yml                                 Module YAML meta-data (added by MakeMaker)
 META.json                                Module JSON meta-data (added by MakeMaker)

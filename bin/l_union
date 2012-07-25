@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 
 use strict;
 use List::Vectorize;
@@ -9,4 +8,4 @@ for (@ARGV) {
 	push(@$sets, [ <F> ]);
 	close F;
 }
-print join "", @{intersect(@$sets)};
+print join "", @{union(@$sets)};
