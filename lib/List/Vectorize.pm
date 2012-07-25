@@ -9,7 +9,7 @@ require Exporter;
 
 our @ISA = ("Exporter");
 
-our $VERSION = "1.04";
+our $VERSION = "1.05";
 
 our @EXPORT = qw(sapply mapply happly tapply initial_array initial_matrix order
                  rank sort_array reverse_array repeat rep copy paste seq c test 
@@ -769,9 +769,11 @@ cummulative function on an array.
 
 =back
 
-=head1 COMMAND LINE
+=head2 COMMAND LINE
 
 We provide some scripts to manuplate text files.
+
+=over 4
 
 =item C<l_intersect file1 file2 ...>
 
